@@ -10,28 +10,28 @@ const form = document.querySelector('form');
 form.addEventListener('submit', event => {
   event.preventDefault();
   const delay = document.querySelector('input[name="delay"]').value.trim();
-  const selectedState = document.querySelector('input[name="state"]:checked');
-  const isFulfilled = selectedState.value === 'fulfilled';
+  const selectedState = document.querySelector(
+    'input[name="state"]:checked'
+  ).value;
   new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (isFulfilled) {
-        resolve(
-          iziToast.success({
-            position: 'topRight',
-            iconText: `✅`,
-            message: `Fulfilled promise in ${delay}ms`,
-          })
-        );
-      } else {
-        reject(
-          iziToast.error({
-            position: 'topRight',
-            iconText: `❌`,
-            message: `Rejected promise in ${delay}ms`,
-          })
-        );
-      }
+      selectedState === 'fulfilled' ? resolve(delay) : reject(delay);
+    }, delay);
+  })
+    .then(ms => {
+      iziToast.success({
+        iconText: `✅`,
+        message: `Fulfilled promise in ${ms}ms`,
+        position: 'topRight',
+      });
+    })
+    .catch(ms => {
+      iziToast.error({
+        iconText: `❌`,
+        message: `Rejected promise in ${ms}ms`,
+        position: 'topRight',
+      });
     });
-  });
+
   form.reset();
 });
